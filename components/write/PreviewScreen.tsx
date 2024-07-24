@@ -23,7 +23,8 @@ const PreviewScreen: React.FC<PreviewScreenProps> = ({ title, description, hasht
   const [rightUnit, setRightUnit] = useState(''); // 계산 결과 뒤의 단위
   const [user, setUser] = useState<User | null>(null); // User 타입을 허용하도록 설정
   const [modalOpen, setModalOpen] = useState(false); // 모달 상태 추가
-  const [newDocId, setNewDocId] = useState(''); // 새 문서 ID 저장
+  const [newSlug, setNewSlug] = useState(''); // 새 슬러그 저장
+  const [newUserId, setNewUserId] = useState(''); // 새 사용자 ID 저장
   const router = useRouter();
 
   useEffect(() => {
@@ -81,7 +82,8 @@ const PreviewScreen: React.FC<PreviewScreenProps> = ({ title, description, hasht
 
       if (response.ok) {
         const responseData = await response.json();
-        setNewDocId(responseData.id);
+        setNewSlug(responseData.slug);
+        setNewUserId(responseData.userId);
         setModalOpen(true); // 모달 열기
         resetCalculator();
       } else {
@@ -96,7 +98,7 @@ const PreviewScreen: React.FC<PreviewScreenProps> = ({ title, description, hasht
 
   const handleModalClose = () => {
     setModalOpen(false);
-    router.push(`/detail/${newDocId}`); // 새 문서 페이지로 이동
+    router.push(`/detail/${newUserId}/${newSlug}`); // 새 문서 페이지로 이동
   };
 
   return (

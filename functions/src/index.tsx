@@ -22,12 +22,15 @@ function generateSlug(text: string): string {
   return text
     .toString()
     .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^\w\s-]/g, '')
-    .trim()
-    .replace(/\s+/g, '-')
+    .replace(/[\u0300-\u036f]/g, '') // 발음 구별 기호 제거
+    .replace(
+      /[^a-zA-Z0-9\u1100-\u11FF\u3130-\u318F\uA960-\uA97F\uAC00-\uD7AF\u0E00-\u0E7F\u0900-\u097F\u0600-\u06FF\u0750-\u077F\u00C0-\u017F\u0400-\u04FF\u0370-\u03FF\u1F00-\u1FFF\u3040-\u30FF\u4E00-\u9FFF\s-]/g,
+      ''
+    ) // 허용된 문자 외 제거
+    .replace(/\s+/g, '-') // 공백을 하이픈으로 변환
     .toLowerCase();
 }
+
 
 // 로그인 함수
 export const login = onRequest(
@@ -115,7 +118,16 @@ export const publish = onRequest(
           입력변수아이디: element.id,
           변수단위이름: prefixTexts[element.id] || '',
           변수단위: suffixTexts[element.id] || '',
+          초기값: element.id.startsWith('사용자입력변수') ? '0' : element.value || '0', //  input의 value는 0으로 고정 저장
         }));
+
+        // 계산 수식에서 id가 input인 변수는 ID로 저장
+        const expressionWithVariables = elements.map((el: any) => {
+          if (el.type === 'input') {
+            return el.id; // 입력 변수의 ID를 사용
+          }
+          return el.value;
+        }).join(' ');
 
         const docData = {
           계산결과: {
@@ -125,7 +137,7 @@ export const publish = onRequest(
           계산기설명: description,
           계산기이름: title,
           해시태그: hashtag ? hashtag.split(',').map((tag: string) => tag.trim()) : [],
-          계산수식: elements.map((el: any) => el.value).join(' '),
+          계산수식: expressionWithVariables,
           계산횟수: '0',
           방문자수: '0',
           사용자입력변수: inputVariables,
@@ -141,7 +153,7 @@ export const publish = onRequest(
 
         const docRef = await firestore.collection('detail').add(docData);
 
-        response.json({ success: true, id: docRef.id, slug: docData.slug });
+        response.json({ success: true, id: docRef.id, slug: docData.slug, userId: docData.userId }); // userId 포함
       } catch (error) {
         logger.error("문서 발행 중 오류 발생:", error);
         response.status(500).json({ error: '문서 발행에 실패하였습니다.' });
