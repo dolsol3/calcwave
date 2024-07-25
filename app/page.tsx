@@ -46,7 +46,7 @@ export default function Home() {
     <div className="container grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-5">
       {details.map((detail) => (
         <Link key={detail.id} href={`/detail/${detail.userId}/${encodeURIComponent(detail.slug)}`}>
-          <Card className="h-80 w-80 cursor-pointer">
+          <Card className="h-60 w-80 cursor-pointer">
             <CardHeader className="justify-between">
               <div className="flex gap-5">
                 <Avatar isBordered radius="full" size="md" src={detail.프로필사진} />
@@ -63,20 +63,6 @@ export default function Home() {
                 {detail.해시태그 ? detail.해시태그.map((tag: string) => `#${tag}`).join(' ') : ""}
               </span>
             </CardBody>
-            <CardFooter className="gap-3">
-              <div className="flex gap-1">
-                <p className="font-semibold text-default-400 text-small">{detail.방문자수}</p>
-                <p className="text-default-400 text-small">방문자</p>
-              </div>
-              <div className="flex gap-1">
-                <p className="font-semibold text-default-400 text-small">{detail.계산횟수}</p>
-                <p className="text-default-400 text-small">계산</p>
-              </div>
-              <div className="flex gap-1">
-                <p className="font-semibold text-default-400 text-small">{detail.찜}</p>
-                <p className="text-default-400 text-small">찜</p>
-              </div>
-            </CardFooter>
           </Card>
         </Link>
       ))}

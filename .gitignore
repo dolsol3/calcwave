@@ -41,3 +41,6 @@ next-env.d.ts
 
 # serviceAccountKey
 serviceAccountKey.json
+
+# SSL
+/.well-known/acme-challenge/

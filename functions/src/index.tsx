@@ -149,6 +149,7 @@ export const publish = onRequest(
           찜: '0',
           프로필사진: userPicture,
           slug: slug, // 슬러그 추가
+          이메일: email,
         };
 
         const docRef = await firestore.collection('detail').add(docData);
