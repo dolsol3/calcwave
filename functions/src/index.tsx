@@ -153,7 +153,6 @@ export const publish = onRequest(
         };
 
         const docRef = await firestore.collection('detail').add(docData);
-
         response.json({ success: true, id: docRef.id, slug: docData.slug, userId: docData.userId }); // userId 포함
       } catch (error) {
         logger.error("문서 발행 중 오류 발생:", error);
@@ -191,6 +190,41 @@ export const detail = onRequest(
       } catch (error) {
         logger.error("문서 조회 중 오류 발생:", error);
         response.status(500).json({ error: '문서 조회에 실패하였습니다.' });
+      }
+    });
+  }
+);
+
+// 사이트맵 데이터 생성 함수
+export const generateSitemap = onRequest(
+  { region: "asia-northeast3" },
+  async (request: Request, response: Response) => {
+    corsHandler(request, response, async () => {
+      try {
+        const { start, end } = request.query;
+        if (!start || !end) {
+          response.status(400).json({ error: 'Invalid query parameters' });
+          return;
+        }
+
+        // Firestore에서 데이터 조회
+        const snapshot = await firestore.collection('detail')
+          .orderBy('작성날짜')
+          .limit(parseInt(end as string) - parseInt(start as string))
+          .offset(parseInt(start as string))
+          .get();
+        const details = snapshot.docs.map(doc => doc.data());
+
+        // 사이트맵 데이터를 생성
+        const sitemap = details.map((detail) => ({
+          url: `https://calcwave.com/detail/${detail.userId}/${detail.slug}`,
+          lastModified: detail.작성날짜.toDate().toISOString(),
+        }));
+
+        response.json(sitemap);
+      } catch (error) {
+        logger.error("사이트맵 데이터 생성 중 오류 발생:", error);
+        response.status(500).json({ error: '사이트맵 데이터 생성에 실패하였습니다.' });
       }
     });
   }
