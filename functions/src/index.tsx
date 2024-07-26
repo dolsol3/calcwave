@@ -198,7 +198,7 @@ export const detail = onRequest(
 // 사이트맵 데이터 생성 함수
 export const generateSitemap = onRequest(
   { region: "asia-northeast3" },
-  async (request: Request, response: Response) => {
+  async (request, response) => {
     corsHandler(request, response, async () => {
       try {
         const { start, end } = request.query;
@@ -206,6 +206,8 @@ export const generateSitemap = onRequest(
           response.status(400).json({ error: 'Invalid query parameters' });
           return;
         }
+
+        logger.info(`Generating sitemap for range: ${start} - ${end}`);
 
         // Firestore에서 데이터 조회
         const snapshot = await firestore.collection('detail')
@@ -215,16 +217,67 @@ export const generateSitemap = onRequest(
           .get();
         const details = snapshot.docs.map(doc => doc.data());
 
-        // 사이트맵 데이터를 생성
-        const sitemap = details.map((detail) => ({
-          url: `https://calcwave.com/detail/${detail.userId}/${detail.slug}`,
-          lastModified: detail.작성날짜.toDate().toISOString(),
-        }));
+        logger.info(`Fetched ${details.length} documents for sitemap`);
 
-        response.json(sitemap);
+        // 사이트맵 데이터를 생성
+        const sitemapXml = `
+          <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+            ${details.map(detail => `
+              <url>
+                <loc>${`https://calcwave.com/detail/${detail.userId}/${detail.slug}`}</loc>
+                <lastmod>${detail.작성날짜.toDate().toISOString()}</lastmod>
+              </url>
+            `).join('')}
+          </urlset>
+        `;
+
+        logger.info('Generated sitemap XML:', sitemapXml);
+
+        response.set('Content-Type', 'application/xml');
+        response.status(200).send(sitemapXml);
       } catch (error) {
         logger.error("사이트맵 데이터 생성 중 오류 발생:", error);
         response.status(500).json({ error: '사이트맵 데이터 생성에 실패하였습니다.' });
+      }
+    });
+  }
+);
+
+// 사이트맵 인덱스 생성 함수
+export const generateSitemapIndex = onRequest(
+  { region: "asia-northeast3" },
+  async (request, response) => {
+    corsHandler(request, response, async () => {
+      try {
+        // 글의 총 개수 확인
+        const totalDocsSnapshot = await firestore.collection('detail').get();
+        const totalDocs = totalDocsSnapshot.size;
+
+        // 40000개당 하나의 sitemap으로 나눔
+        const docsPerSitemap = 40000;
+        const sitemapCount = Math.ceil(totalDocs / docsPerSitemap);
+
+        const sitemapIndex = `
+          <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+            ${Array.from({ length: sitemapCount }, (_, index) => {
+              const lastModifiedDate = new Date().toISOString(); // 최신 수정 날짜를 현재 시간으로 설정
+              return `
+                <sitemap>
+                  <loc>${`https://calcwave.com/api/sitemap/${index}`}</loc>
+                  <lastmod>${lastModifiedDate}</lastmod>
+                </sitemap>
+              `;
+            }).join('')}
+          </sitemapindex>
+        `;
+
+        logger.info('Generated sitemap index XML:', sitemapIndex);
+
+        response.setHeader('Content-Type', 'application/xml');
+        response.status(200).end(sitemapIndex);
+      } catch (error) {
+        logger.error("사이트맵 인덱스 생성 중 오류 발생:", error);
+        response.status(500).json({ error: '사이트맵 인덱스 생성에 실패하였습니다.' });
       }
     });
   }
