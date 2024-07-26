@@ -7,7 +7,11 @@
     "sourceMap": true,
     "strict": true,
     "target": "es2017",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["../*"]  // 루트의 설정을 참조하도록 경로 설정
+    }
   },
   "compileOnSave": true,
   "include": [

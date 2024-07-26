@@ -1,11 +1,14 @@
 // app/layout.tsx
-import React from 'react'; 
+
+import React from 'react';
 import type { Metadata } from "next";
 import { Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 import NavbarApp from "../components/navbar/App";
 import { Providers } from "./providers";
 import { NextUIProvider } from '@nextui-org/react';
+import GoogleTagManagerComponent from './gtm';
+import AdsenseComponent from './adsense';
 
 
 const notoSansKr = Noto_Sans_KR({ subsets: ["latin"] });
@@ -16,6 +19,9 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.ico",
   },
+  other: {
+    'naver-site-verification': '2e3f77b3a472326232fcaaed94a2945bc55f12eb',
+  },
 };
 
 export default function RootLayout({
@@ -25,10 +31,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" className="light">
+      <head>
+        <GoogleTagManagerComponent />
+        <AdsenseComponent />
+      </head>
       <body className={notoSansKr.className}>
         <NextUIProvider>
           <NavbarApp />
-          <div className="grid justify-center"> 
+          <div className="grid justify-center">
             <Providers>
               {children}
             </Providers>

@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: '/write',
     },
-    sitemap: 'https://calcwave.com/sitemap-index.xml',
+    sitemap: 'https://calcwave.com/api/sitemap',
   };
 }
