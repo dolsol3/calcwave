@@ -6,9 +6,18 @@ import React from 'react';
 import { Input, Button, ButtonGroup, Card, CardBody } from "@nextui-org/react";
 import { evaluate } from 'mathjs';
 
+const convertTextToHTML = (textArray: string[]): JSX.Element[] => {
+  return textArray.map((paragraph: string, index: number) => {
+    if (paragraph === "<br>") {
+      return <p key={index}><br /></p>; // 빈 줄을 <br> 태그로 표시
+    }
+    return <p key={index}>{paragraph}</p>;
+  });
+};
+
 interface CalculatorData {
   계산기이름: string;
-  계산기설명: string;
+  계산기설명: string[]; // 배열 형태로 변경
   해시태그: string[];
   사용자입력변수: Array<{ 입력변수아이디: string, 변수단위이름: string, 변수단위: string }>;
   계산수식: string;
@@ -93,7 +102,7 @@ const ClientComponent: React.FC<ClientComponentProps> = ({ calculator, initialIn
       </Card>
       <Card>
         <CardBody>
-          <p>{calculator.계산기설명}</p>
+          {convertTextToHTML(calculator.계산기설명)} {/* 줄 바꿈 처리된 HTML 출력 */}
         </CardBody>
       </Card>
       <Card>

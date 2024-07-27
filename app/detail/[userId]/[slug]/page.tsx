@@ -13,7 +13,7 @@ interface DetailPageProps {
 
 interface CalculatorData {
   계산기이름: string;
-  계산기설명: string;
+  계산기설명: string[];
   해시태그: string[];
   사용자입력변수: Array<{ 입력변수아이디: string, 변수단위이름: string, 변수단위: string }>;
   계산수식: string;
@@ -27,21 +27,28 @@ async function fetchCalculatorData(userId: string, slug: string): Promise<Calcul
   if (!response.ok) {
     throw new Error("Failed to fetch data");
   }
-  return await response.json();
+  const data = await response.json();
+
+  // 문자열을 배열로 변환
+  if (typeof data.계산기설명 === 'string') {
+    data.계산기설명 = data.계산기설명.split('\n').map((paragraph: string) => paragraph || "<br>");
+  }
+
+  return data;
 }
 
 export async function generateMetadata({ params }: DetailPageProps): Promise<Metadata> {
   const calculator = await fetchCalculatorData(params.userId, params.slug);
   return {
     title: calculator.계산기이름,
-    description: calculator.계산기설명,
+    description: calculator.계산기설명.join(' '), // 배열을 문자열로 변환
     keywords: calculator.해시태그 ? calculator.해시태그.join(', ') : 'AiCalculator, calcwave, calculator, calculation',
     authors: [
       { name: calculator.이메일 }
     ],
     openGraph: {
       title: calculator.계산기이름,
-      description: calculator.계산기설명,
+      description: calculator.계산기설명.join(' '), // 배열을 문자열로 변환
       images: [
         {
           url: 'https://firebasestorage.googleapis.com/v0/b/calc-sky4.appspot.com/o/metaImgae_calcwave.jpg?alt=media&token=72b0ca2c-47a5-4b16-b2f4-d42b2418ee55',
@@ -51,7 +58,7 @@ export async function generateMetadata({ params }: DetailPageProps): Promise<Met
     twitter: {
       card: 'summary_large_image',
       title: calculator.계산기이름,
-      description: calculator.계산기설명,
+      description: calculator.계산기설명.join(' '), // 배열을 문자열로 변환
       images: ['https://firebasestorage.googleapis.com/v0/b/calc-sky4.appspot.com/o/metaImgae_calcwave.jpg?alt=media&token=72b0ca2c-47a5-4b16-b2f4-d42b2418ee55'],
     },
   };

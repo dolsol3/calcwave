@@ -11,8 +11,6 @@ import { Feed } from "feed";
 import { truncateDescription } from "@/utils/description"; // 유틸리티 함수 불러오기
 import franc from 'franc';
 
-
-
 // CORS 설정
 const corsHandler = cors({ origin: true });
 
@@ -134,12 +132,16 @@ export const publish = onRequest(
           return el.value;
         }).join(' ');
 
+        // 줄바꿈을 <br>로 변환하여 description 저장
+        const formattedDescription = description.split('\n').map((paragraph: string) => paragraph || "<br>");
+
+
         const docData = {
           계산결과: {
             결과이름: leftUnit,
             단위: rightUnit,
           },
-          계산기설명: description,
+          계산기설명: formattedDescription,
           계산기이름: title,
           해시태그: hashtag ? hashtag.split(',').map((tag: string) => tag.trim()) : [],
           계산수식: expressionWithVariables,
