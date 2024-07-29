@@ -35,6 +35,8 @@ const ClientComponent: React.FC<ClientComponentProps> = ({ calculator, initialIn
   const [result, setResult] = React.useState<number>(0);
   const [resultName, setResultName] = React.useState<string>(calculator.계산결과.결과이름);
   const [unit, setUnit] = React.useState<string>(calculator.계산결과.단위);
+  const [question, setQuestion] = React.useState<string>('');
+  const [aiResponse, setAiResponse] = React.useState<string>('');
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>, key: string) => {
     const value = parseFloat(event.target.value);
@@ -68,6 +70,40 @@ const ClientComponent: React.FC<ClientComponentProps> = ({ calculator, initialIn
     setResult(0);
     setResultName(calculator.계산결과.결과이름);
     setUnit(calculator.계산결과.단위);
+    setAiResponse('');
+    setQuestion('');
+  };
+
+
+  const handleQuestionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setQuestion(event.target.value);
+  };
+
+
+  const handleAskAI = async () => {
+    try {
+      const response = await fetch('https://askai-hry6fdb6aa-du.a.run.app/askAI', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: calculator.계산기이름,
+          description: calculator.계산기설명.join('\n'), // 배열을 문자열로 변환
+          question,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to get AI response");
+      }
+
+      const data = await response.json();
+      setAiResponse(data.answer);
+    } catch (error) {
+      console.error("Error asking AI:", error);
+      setAiResponse("AI 응답을 가져오는 중 오류가 발생했습니다.");
+    }
   };
 
   return (
@@ -110,6 +146,21 @@ const ClientComponent: React.FC<ClientComponentProps> = ({ calculator, initialIn
           <p>{calculator.해시태그?.map((tag: string) => `#${tag}`).join(' ')}</p>
         </CardBody>
       </Card>
+      <Input
+        type="text"
+        label="질문"
+        placeholder="계산에 대한 질문을 입력하세요"
+        value={question}
+        onChange={handleQuestionChange}
+      />
+      <Button onClick={handleAskAI}>AI에게 물어보기</Button>
+      {aiResponse && (
+        <Card>
+          <CardBody>
+            <p>AI 응답: {aiResponse}</p>
+          </CardBody>
+        </Card>
+      )}
       <ButtonGroup>
         <Button>공유하기</Button>
         <Button>캡처하기</Button>

@@ -1,5 +1,9 @@
 {
   "projects": {
-    "default": "calc-sky4"
-  }
+    "default": "calc-sky4",
+    "test": "calc-sky2"
+  },
+  "targets": {},
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
 }
