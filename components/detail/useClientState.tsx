@@ -81,6 +81,7 @@ const ClientComponent: React.FC<ClientComponentProps> = ({ calculator, initialIn
 
 
   const handleAskAI = async () => {
+    console.log("Question submitted:", question);
     try {
       const response = await fetch('https://askai-hry6fdb6aa-du.a.run.app/askAI', {
         method: 'POST',
@@ -94,11 +95,14 @@ const ClientComponent: React.FC<ClientComponentProps> = ({ calculator, initialIn
         }),
       });
 
+      console.log("Request sent to server");
+
       if (!response.ok) {
         throw new Error("Failed to get AI response");
       }
 
       const data = await response.json();
+      console.log("Response received from server:", data);
       setAiResponse(data.answer);
     } catch (error) {
       console.error("Error asking AI:", error);
