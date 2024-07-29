@@ -6,8 +6,8 @@ import cors from "cors";
 import { Request, Response } from "express";
 import { getFirestore } from "firebase-admin/firestore";
 import { Feed } from "feed";
-import { truncateDescription } from "@/utils/description";
-import franc from 'franc';
+import { truncateDescription } from "./utils/description";
+
 // 주석테스트
 // CORS 설정
 const corsHandler = cors({ origin: true });
@@ -34,7 +34,8 @@ const languageMap: { [key: string]: string } = {
   'zul': 'zu'
 };
 
-function detectLanguage(text: string): string {
+async function detectLanguage(text: string): Promise<string> {
+  const { franc } = await import('franc');
   const langCode = (franc as any).detect(text, { whitelist: Object.keys(languageMap) });
   return languageMap[langCode] || 'en'; // 매핑되지 않은 언어는 기본적으로 영어로 설정
 }
@@ -70,9 +71,9 @@ export const generateRSS = onRequest(
           }
         });
 
-        details.forEach(detail => {
+        for (const detail of details) {
           const shortDescription = truncateDescription(detail.계산기설명);
-          const itemLanguage = detectLanguage(detail.계산기설명); // 각 아이템의 언어 감지
+          const itemLanguage = await detectLanguage(detail.계산기설명); // 각 아이템의 언어 감지
           feed.addItem({
             title: detail.계산기이름,
             id: `https://calcwave.com/detail/${detail.userId}/${detail.slug}`,
@@ -91,7 +92,7 @@ export const generateRSS = onRequest(
               { name: "language", objects: [{ language: itemLanguage }] }
             ]
           });
-        });
+        }
 
         const rss = feed.rss2();
         console.log('Generated RSS:', rss);

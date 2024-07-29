@@ -1,4 +1,4 @@
-// utils/description.ts
+// ./functions/src/utils/description.ts
 
 /**
  * 문자열을 주어진 길이에 맞게 자르고, 생략 부호(...)를 추가하는 함수

@@ -3,8 +3,11 @@
 // Firebase Admin SDK 초기화
 import * as admin from 'firebase-admin';
 
-admin.initializeApp(); // 서비스 계정 키 파일이 필요한 경우 옵션 추가
-
+// Firebase 초기화
+if (!admin.apps.length) {
+    admin.initializeApp();
+  }
+  
 export { login } from "./login";
 export { publish } from "./publish";
 export { detail } from "./detail";
