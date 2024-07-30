@@ -5,9 +5,9 @@ import * as admin from 'firebase-admin';
 
 // Firebase 초기화
 if (!admin.apps.length) {
-    admin.initializeApp();
-  }
-  
+  admin.initializeApp();
+}
+
 export { login } from "./login";
 export { publish } from "./publish";
 export { detail } from "./detail";
@@ -16,3 +16,5 @@ export { generateSitemapIndex } from "./generateSitemapIndex";
 export { generateRSS } from "./generateRSS";
 export { askAI } from "./askAI";
 export { testFunction } from "./testfunctions";
+export { increaseViewCount } from "./increaseViewCount";
+export { increaseCalculationCount } from "./increaseCalculationCount";

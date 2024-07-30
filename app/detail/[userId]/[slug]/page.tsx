@@ -15,6 +15,9 @@ interface CalculatorData {
   계산기이름: string;
   계산기설명: string[];
   해시태그: string[];
+  작성날짜: Date;
+  방문자수: number;
+  계산횟수: number;
   이메일: string;
 }
 
@@ -25,7 +28,10 @@ async function fetchCalculatorData(userId: string, slug: string): Promise<Calcul
   }
   const data = await response.json();
 
-  // Convert string to array if necessary
+  // Parse date correctly
+  data.작성날짜 = new Date(data.작성날짜._seconds * 1000);
+
+  // Ensure `계산기설명` is an array
   if (typeof data.계산기설명 === 'string') {
     data.계산기설명 = data.계산기설명.split('\n').map((paragraph: string) => paragraph || "<br>");
   }
@@ -64,7 +70,7 @@ const DetailPage: React.FC<DetailPageProps> = async ({ params }) => {
   const { userId, slug } = params;
   const calculator = await fetchCalculatorData(userId, slug);
 
-  return <ClientComponent calculator={calculator} />;
+  return <ClientComponent calculator={calculator} userId={userId} slug={slug} />;
 };
 
 export default DetailPage;

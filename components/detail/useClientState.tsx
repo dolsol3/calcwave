@@ -2,7 +2,7 @@
 
 'use client'
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Input, Button, Card, CardBody } from "@nextui-org/react";
 
 const convertTextToHTML = (textArray: string[]): JSX.Element[] => {
@@ -18,15 +18,33 @@ interface CalculatorData {
   계산기이름: string;
   계산기설명: string[];
   해시태그: string[];
+  작성날짜: Date;
+  방문자수: number;
+  계산횟수: number;
 }
 
 interface ClientComponentProps {
   calculator: CalculatorData;
+  userId: string;
+  slug: string;
 }
 
-const ClientComponent: React.FC<ClientComponentProps> = ({ calculator }) => {
-  const [question, setQuestion] = React.useState<string>('');
-  const [aiResponse, setAiResponse] = React.useState<any>(null);
+const ClientComponent: React.FC<ClientComponentProps> = ({ calculator, userId, slug }) => {
+  const [question, setQuestion] = useState<string>('');
+  const [aiResponse, setAiResponse] = useState<any>(null);
+  const [viewCount, setViewCount] = useState<number>(calculator.방문자수);
+  const [calcCount, setCalcCount] = useState<number>(calculator.계산횟수);
+
+  useEffect(() => {
+    // Increase view count
+    fetch(`https://increaseviewcount-hry6fdb6aa-du.a.run.app?userId=${userId}&slug=${slug}`, {
+      method: 'POST',
+    })
+    .then(() => {
+      setViewCount(prevCount => prevCount + 1);
+    })
+    .catch(error => console.error('Error increasing view count:', error));
+  }, [userId, slug]);
 
   const handleQuestionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setQuestion(event.target.value);
@@ -56,12 +74,17 @@ const ClientComponent: React.FC<ClientComponentProps> = ({ calculator }) => {
       const responseJson = await response.json();
       console.log("Response received from server:", responseJson);
 
-      if (responseJson.result) {
-        console.log("Response result:", responseJson.result);
-        console.log("Response explanation:", responseJson.explanation);
-      }
-
       setAiResponse(responseJson);
+
+      // Increase calculation count
+      fetch(`https://increasecalculationcount-hry6fdb6aa-du.a.run.app?userId=${userId}&slug=${slug}`, {
+        method: 'POST',
+      })
+      .then(() => {
+        setCalcCount(prevCount => prevCount + 1);
+      })
+      .catch(error => console.error('Error increasing calculation count:', error));
+
     } catch (error) {
       console.error("Error asking AI:", error);
       setAiResponse({ error: "AI 응답을 가져오는 중 오류가 발생했습니다." });
@@ -71,6 +94,9 @@ const ClientComponent: React.FC<ClientComponentProps> = ({ calculator }) => {
   return (
     <div>
       <h1>{calculator.계산기이름}</h1>
+      <p>Date: {calculator.작성날짜.toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</p>
+      <p>Views: {viewCount}</p>
+      <p>Number of calculations: {calcCount}</p>
       <Card>
         <CardBody>
           {convertTextToHTML(calculator.계산기설명)}
