@@ -5,15 +5,6 @@
 import React from 'react';
 import { Input, Button, Card, CardBody } from "@nextui-org/react";
 
-const convertTextToHTML = (textArray: string[]): JSX.Element[] => {
-  return textArray.map((paragraph: string, index: number) => {
-    if (paragraph === "<br>") {
-      return <p key={index}><br /></p>;
-    }
-    return <p key={index}>{paragraph}</p>;
-  });
-};
-
 interface CalculatorData {
   계산기이름: string;
   계산기설명: string[];
@@ -26,7 +17,7 @@ interface ClientComponentProps {
 
 const ClientComponent: React.FC<ClientComponentProps> = ({ calculator }) => {
   const [question, setQuestion] = React.useState<string>('');
-  const [aiResponse, setAiResponse] = React.useState<string>('');
+  const [aiResponse, setAiResponse] = React.useState<any>(null);
 
   const handleQuestionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setQuestion(event.target.value);
@@ -53,12 +44,18 @@ const ClientComponent: React.FC<ClientComponentProps> = ({ calculator }) => {
         throw new Error("Failed to get AI response");
       }
 
-      const data = await response.json();
-      console.log("Response received from server:", data);
-      setAiResponse(data.answer);
+      const responseJson = await response.json();
+      console.log("Response received from server:", responseJson);
+
+      if (responseJson.result) {
+        console.log("Response result:", responseJson.result);
+        console.log("Response explanation:", responseJson.explanation);
+      }
+
+      setAiResponse(responseJson);
     } catch (error) {
       console.error("Error asking AI:", error);
-      setAiResponse("AI 응답을 가져오는 중 오류가 발생했습니다.");
+      setAiResponse({ error: "AI 응답을 가져오는 중 오류가 발생했습니다." });
     }
   };
 
@@ -67,7 +64,9 @@ const ClientComponent: React.FC<ClientComponentProps> = ({ calculator }) => {
       <h1>{calculator.계산기이름}</h1>
       <Card>
         <CardBody>
-          {convertTextToHTML(calculator.계산기설명)}
+          {calculator.계산기설명.map((paragraph, index) => (
+            <p key={index}>{paragraph}</p>
+          ))}
         </CardBody>
       </Card>
       <Card>
@@ -86,15 +85,19 @@ const ClientComponent: React.FC<ClientComponentProps> = ({ calculator }) => {
       {aiResponse && (
         <Card>
           <CardBody>
-            <p>AI 응답: {aiResponse}</p>
+            {aiResponse.error && <p>{aiResponse.error}</p>}
+            {aiResponse.result && (
+              <>
+                <p><strong>결과:</strong> {aiResponse.result}</p>
+                <p><strong>설명:</strong> {aiResponse.explanation}</p>
+              </>
+            )}
           </CardBody>
         </Card>
       )}
-      <Button>공유하기</Button>
-      <Button>캡처하기</Button>
-      <Button>수정하기</Button>
     </div>
   );
 };
 
 export default ClientComponent;
+
