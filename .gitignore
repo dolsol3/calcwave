@@ -44,3 +44,7 @@ serviceAccountKey.json
 
 # SSL
 /.well-known/acme-challenge/
+
+# log files
+firebase-debug.log
+ui-debug.log
