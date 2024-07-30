@@ -5,6 +5,15 @@
 import React from 'react';
 import { Input, Button, Card, CardBody } from "@nextui-org/react";
 
+const convertTextToHTML = (textArray: string[]): JSX.Element[] => {
+  return textArray.map((paragraph: string, index: number) => {
+    if (paragraph === "<br>") {
+      return <p key={index}><br /></p>; // 빈 줄을 <br> 태그로 표시
+    }
+    return <p key={index}>{paragraph}</p>;
+  });
+};
+
 interface CalculatorData {
   계산기이름: string;
   계산기설명: string[];
@@ -64,9 +73,7 @@ const ClientComponent: React.FC<ClientComponentProps> = ({ calculator }) => {
       <h1>{calculator.계산기이름}</h1>
       <Card>
         <CardBody>
-          {calculator.계산기설명.map((paragraph, index) => (
-            <p key={index}>{paragraph}</p>
-          ))}
+          {convertTextToHTML(calculator.계산기설명)}
         </CardBody>
       </Card>
       <Card>
@@ -100,4 +107,3 @@ const ClientComponent: React.FC<ClientComponentProps> = ({ calculator }) => {
 };
 
 export default ClientComponent;
-

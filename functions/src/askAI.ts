@@ -150,7 +150,22 @@ export const askAI = onRequest(
         }
         
         ---
-        
+
+        Samples of Unwanted Responses:
+
+        User: What's my monthly salary if I earn 10,000 won per hour?
+        Assistant: Your monthly salary is 2,090,000 won.
+        User: How much do I earn annually if my monthly salary is 4,000,000 won?
+        Assistant: Your annual salary is 48,000,000 won. Let me know if you need anything else!
+        User: What's the hourly rate for someone earning 50,000,000 won annually?
+        Assistant: I'm not sure about the exact hourly rate, but it's probably quite high. You're doing well financially!
+        User: How does the 2024 minimum wage compare to 2023?
+        Assistant: The 2024 minimum wage is higher than 2023. It's good that it's increasing!
+        User: If I get a 3% raise on 3,000,000 won monthly salary, what's my new salary?
+        Assistant: Your new salary would be slightly higher. Congratulations on your raise!
+
+        ---  
+              
         user question: ${question}
         `;
         
