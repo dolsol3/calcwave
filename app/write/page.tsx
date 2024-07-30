@@ -1,48 +1,79 @@
 // app/write/page.tsx
 'use client'
 import React, { useEffect, useState } from 'react';
-import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { auth } from '../../firestore';
-import { onAuthStateChanged, User } from 'firebase/auth'; // User 타입 가져오기
-import { CalculationProvider } from '../../components/write/useCalculationState';
+import { onAuthStateChanged, User } from 'firebase/auth';
 import Title from '../../components/write/Title';
+import { Button } from "@nextui-org/react";
 
-const CalculatorPad = dynamic(() => import('../../components/write/CalculatorPad'), { ssr: false });
-const PreviewScreen = dynamic(() => import('../../components/write/PreviewScreen'), { ssr: false });
+const WritePage: React.FC = () => {
+ const [user, setUser] = useState<User | null>(null);
+ const router = useRouter();
+ const [title, setTitle] = useState('');
+ const [description, setDescription] = useState('');
+ const [hashtag, setHashtag] = useState('');
 
-const CalculationPage: React.FC = () => {
- const [user, setUser] = useState<User | null>(null); // User 타입 또는 null 허용
- const router = useRouter();
- const [title, setTitle] = useState('');
- const [description, setDescription] = useState('');
- const [hashtag, setHashtag] = useState('');
+ useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, (user) => {
+   if (user) {
+    setUser(user);
+   } else {
+    router.push('/login');
+   }
+  });
 
- useEffect(() => {
-  const unsubscribe = onAuthStateChanged(auth, (user) => {
-   if (user) {
-    setUser(user);
-   } else {
-    router.push('/login');
-   }
-  });
+  return () => unsubscribe();
+ }, [router]);
 
-  return () => unsubscribe();
- }, [router]);
+ const handlePublish = async () => {
+   if (!user) {
+     alert("로그인이 필요합니다.");
+     return;
+   }
 
- if (!user) {
-  return <div>Loading...</div>;
- }
+   const docData = {
+     uid: user.uid,
+     userName: user.displayName,
+     userPicture: user.photoURL,
+     title,
+     description,
+     hashtag,
+   };
 
- return (
-  <CalculationProvider>
-   <div className="container mx-auto p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-    <Title setTitle={setTitle} setDescription={setDescription} setHashtag={setHashtag} />
-    <CalculatorPad />
-    <PreviewScreen title={title} description={description} hashtag={hashtag} />
-   </div>
-  </CalculationProvider>
- );
+   try {
+     const response = await fetch('https://publish-hry6fdb6aa-du.a.run.app', {
+       method: 'POST',
+       headers: {
+         'Content-Type': 'application/json',
+         'Authorization': `Bearer ${await user.getIdToken()}`,
+       },
+       body: JSON.stringify(docData),
+     });
+
+     if (response.ok) {
+       const responseData = await response.json();
+       router.push(`/detail/${responseData.userId}/${responseData.slug}`);
+     } else {
+       const errorData = await response.json();
+       alert(errorData.error);
+     }
+   } catch (error) {
+     console.error("계산기 발행 중 오류가 발생했습니다:", error);
+     alert('계산기 발행에 실패했습니다.');
+   }
+ };
+
+ if (!user) {
+  return <div>Loading...</div>;
+ }
+
+ return (
+   <div className="container mx-auto p-4">
+     <Title setTitle={setTitle} setDescription={setDescription} setHashtag={setHashtag} />
+     <Button onClick={handlePublish} className="mt-4">계산기 발행하기</Button>
+   </div>
+ );
 };
 
-export default CalculationPage;
+export default WritePage;
