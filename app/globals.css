@@ -5,36 +5,54 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-  --margin:0;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+  --color-deep-teal: #2E8B57;
+  --color-light-sky: #87CEEB;
+  --color-sand: #F4A460;
+  --color-bright-teal: #40E0D0;
+  --color-pale-blue: #F0F8FF;
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background-color: var(--color-pale-blue);
+  color: var(--color-deep-teal);
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+/* 물결 효과 애니메이션 */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
   }
 }
 
-.draggable {
-  touch-action: none;
+.ripple-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple-effect:after {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle, #fff 10%, transparent 10.01%);
+  background-repeat: no-repeat;
+  background-position: 50%;
+  transform: scale(10, 10);
+  opacity: 0;
+  transition: transform .5s, opacity 1s;
+}
+
+.ripple-effect:active:after {
+  transform: scale(0, 0);
+  opacity: .3;
+  transition: 0s;
 }

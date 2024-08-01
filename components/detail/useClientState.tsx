@@ -3,7 +3,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
-import { Input, Button, Card, CardBody } from "@nextui-org/react";
+import { Card, CardBody, Input, Button, Chip } from "@nextui-org/react";
 
 const convertTextToHTML = (textArray: string[]): JSX.Element[] => {
   return textArray.map((paragraph: string, index: number) => {
@@ -92,39 +92,48 @@ const ClientComponent: React.FC<ClientComponentProps> = ({ calculator, userId, s
   };
 
   return (
-    <div>
-      <h1>{calculator.계산기이름}</h1>
-      <p>Date: {calculator.작성날짜.toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</p>
-      <p>Views: {viewCount}</p>
-      <p>Number of calculations: {calcCount}</p>
-      <Card>
+    <div className="max-w-4xl mx-auto px-4 py-8 pb-24">
+      <h1 className="text-3xl font-bold text-[#2E8B57] mb-6">{calculator.계산기이름}</h1>
+      <Card className="mb-6">
         <CardBody>
           {convertTextToHTML(calculator.계산기설명)}
         </CardBody>
       </Card>
-      <Card>
-        <CardBody>
-          <p>{calculator.해시태그?.map((tag: string) => `#${tag}`).join(' ')}</p>
-        </CardBody>
-      </Card>
-      <Input
-        type="text"
-        label="질문"
-        placeholder="계산에 대한 질문을 입력하세요"
-        value={question}
-        onChange={handleQuestionChange}
-      />
-      <Button onClick={handleAskAI}>AI에게 물어보기</Button>
+      <div className="flex flex-wrap gap-2 mb-4">
+        {calculator.해시태그.map((tag, index) => (
+          <Chip key={index} className="bg-[#87CEEB] bg-opacity-20 text-[#2E8B57]">
+            {tag}
+          </Chip>
+        ))}
+      </div>
+      <div className="text-sm text-gray-600 mb-6">
+        <span className="mr-4">조회수: {viewCount}</span>
+        <span>계산 횟수: {calcCount}</span>
+      </div>
+
+      {/* 여기에 계산기 주요 기능 구현 */}
+
+      <div className="fixed bottom-0 left-0 right-0 bg-[#40E0D0] p-4 flex justify-center items-center shadow-lg">
+        <Input
+          className="w-2/3 mr-2"
+          placeholder="AI에게 질문하세요"
+          value={question}
+          onChange={handleQuestionChange}
+        />
+        <Button 
+          color="primary"
+          className="bg-[#2E8B57]"
+          onClick={handleAskAI}
+        >
+          질문하기
+        </Button>
+      </div>
+
       {aiResponse && (
-        <Card>
+        <Card className="mt-6 bg-[#F0F8FF]">
           <CardBody>
-            {aiResponse.error && <p>{aiResponse.error}</p>}
-            {aiResponse.result && (
-              <>
-                <p><strong>결과:</strong> {aiResponse.result}</p>
-                <p><strong>설명:</strong> {aiResponse.explanation}</p>
-              </>
-            )}
+            <p>{aiResponse.result}</p>
+            <p>{aiResponse.explanation}</p>
           </CardBody>
         </Card>
       )}

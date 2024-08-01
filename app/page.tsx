@@ -3,21 +3,17 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Avatar, Card, CardHeader, CardBody, CardFooter } from '@nextui-org/react';
 import { collection, getDocs } from 'firebase/firestore';
 import { firestore } from '../firestore';
 import Link from 'next/link';
+import { Card, CardBody, CardHeader, Chip } from "@nextui-org/react";
 
-// Firestore의 실제 데이터 구조와 일치하도록 Detail 인터페이스 수정
 interface Detail {
   id: string;
-  작성자이름: string;
   계산기이름: string;
   해시태그: string[];
-  방문자수: string; // Firestore에서는 숫자를 문자열로 저장하므로 타입 변경
-  계산횟수: string; // Firestore에서는 숫자를 문자열로 저장하므로 타입 변경
-  찜: string;       // Firestore에서는 숫자를 문자열로 저장하므로 타입 변경
-  프로필사진: string;
+  방문자수: string;
+  계산횟수: string;
   userId: string;
   slug: string;
 }
@@ -43,29 +39,47 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="container grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-5">
-      {details.map((detail) => (
-        <Link key={detail.id} href={`/detail/${detail.userId}/${encodeURIComponent(detail.slug)}`}>
-          <Card className="h-60 w-80 cursor-pointer">
-            <CardHeader className="justify-between">
-              <div className="flex gap-5">
-                <Avatar isBordered radius="full" size="md" src={detail.프로필사진} />
-                <div className="flex flex-col gap-1 items-start justify-center">
-                  <h4 className="text-small font-semibold leading-none text-default-600">
-                    {detail.작성자이름}
-                  </h4>
-                </div>
-              </div>
-            </CardHeader>
-            <CardBody className="px-3 py-0 text-default-400">
-              <p className="text-bold text-3xl">{detail.계산기이름}</p>
-              <span className="pt-2">
-                {detail.해시태그 ? detail.해시태그.map((tag: string) => `#${tag}`).join(' ') : ""}
-              </span>
-            </CardBody>
-          </Card>
-        </Link>
-      ))}
+    <div className="max-w-5xl mx-auto px-4 py-8 bg-[#F0F8FF]">
+      <h1 className="text-4xl font-bold text-center mb-10 text-[#2E8B57] font-['Roboto Rounded']">AI Wave Calculator</h1>
+      <div className="relative">
+        <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-[#87CEEB] transform -translate-x-1/2"></div>
+        {details.map((detail, index) => (
+          <div key={detail.id} className="relative mb-8">
+            <div className={`w-[calc(50%-20px)] ${index % 2 === 0 ? 'ml-auto' : 'mr-auto'}`}>
+              <Card 
+                as={Link}
+                href={`/detail/${detail.userId}/${encodeURIComponent(detail.slug)}`}
+                className="hover:shadow-lg transition-all duration-300 ease-in-out transform hover:-translate-y-1 overflow-hidden ripple-effect"
+                style={{
+                  background: 'linear-gradient(135deg, #ffffff 0%, #f0f8ff 100%)'
+                }}
+              >
+                <CardHeader className="pb-0 pt-2 px-4">
+                  <h3 className="text-xl font-semibold text-[#333333] font-['Noto Serif']">{detail.계산기이름}</h3>
+                </CardHeader>
+                <CardBody className="py-2 px-4">
+                  <div className="flex flex-wrap gap-1 mb-2">
+                    {detail.해시태그.slice(0, 3).map((tag, tagIndex) => (
+                      <Chip 
+                        key={tagIndex} 
+                        size="sm" 
+                        variant="flat" 
+                        className="bg-[#87CEEB] bg-opacity-20 text-[#2E8B57]"
+                      >
+                        {tag}
+                      </Chip>
+                    ))}
+                  </div>
+                  <div className="flex justify-end text-xs text-[#666666] mt-2">
+                    <span className="mr-2">Views {detail.방문자수}</span>
+                    <span>Calculations {detail.계산횟수}</span>
+                  </div>
+                </CardBody>
+              </Card>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

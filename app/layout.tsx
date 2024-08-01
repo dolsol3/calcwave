@@ -6,15 +6,15 @@ import { Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
 import NavbarApp from "../components/navbar/App";
 import { Providers } from "./providers";
-import { NextUIProvider } from '@nextui-org/react';
 import GoogleTagManagerComponent from './gtm';
 import AdsenseComponent from './adsense';
 
-
 const notoSansKr = Noto_Sans_KR({ subsets: ["latin"] });
 
+
+
 export const metadata: Metadata = {
-  title: "AI Calculator, CalcWave",
+  title: "AI Wave Calculator, CalcWave",
   description: "If you need all kinds of calculators, here! AI-assisted universal calculator",
   icons: {
     icon: "/favicon.ico",
@@ -35,15 +35,11 @@ export default function RootLayout({
         <GoogleTagManagerComponent />
         <AdsenseComponent />
       </head>
-      <body className={notoSansKr.className}>
-        <NextUIProvider>
+      <body className={`${notoSansKr.className} bg-blue-50`}>
+        <Providers>
           <NavbarApp />
-          <div className="grid justify-center">
-            <Providers>
-              {children}
-            </Providers>
-          </div>
-        </NextUIProvider>
+          {children}
+        </Providers>
       </body>
     </html>
   );

@@ -1,31 +1,21 @@
-// app/logIn/page.tsx
-import dynamic from 'next/dynamic';
-import { Card, CardHeader, CardBody, CardFooter, Avatar, Button } from "@nextui-org/react";
+// ./app/login/page.tsx
 
-const LoginButton = dynamic(() => import('../../components/login/loginbutton'), { ssr: false });
+import React from 'react';
+import LoginButton from '@/components/login/loginbutton';
+import { Card, CardBody, CardHeader } from "@nextui-org/react";
 
-function LoginPage() {
+const LoginPage: React.FC = () => {
   return (
-    // Tailwind CSS를 사용한 전체 화면 크기의 Flexbox 컨테이너 생성
-    <div className="grid justify-center items-center min-h-screen">
-      <Card className="h-80 w-80">
-        <CardHeader className="justify-center">
-          <div className="grid gap-5">
-            <div className="grid grid-col gap-1 justify-center">
-              <h1 className="mt-3 text-3xl font-semibold leading-none text-default-640">로그인</h1>
-            </div>
-          </div>
-        </CardHeader>
-        <CardBody className="flex justify-center items-center px-3 py-0 text-default-400">
-          <p className="text-bold text-sm">구글 이메일로 회원가입 및 로그인을 합니다.</p>
-
-        </CardBody>
-        <CardFooter className="justify-center py-10">
+    <div className="min-h-screen flex flex-col items-center bg-[#F0F8FF] px-4">
+      <h1 className="text-4xl font-bold text-[#2E8B57] my-10 font-['Roboto Rounded']">로그인</h1>
+      <Card className="max-w-md w-full shadow-md rounded-lg bg-white">
+        <CardBody className="p-8 flex flex-col items-center">
+          <p className="text-center text-[#333333] mb-6">Google 계정으로 로그인하세요</p>
           <LoginButton />
-        </CardFooter>
+        </CardBody>
       </Card>
     </div>
   );
-}
+};
 
 export default LoginPage;

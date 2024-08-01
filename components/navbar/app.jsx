@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Input, Link } from "@nextui-org/react";
 import { AcmeLogo } from "./AcmeLogo.jsx";
 import { SearchIcon } from "./SearchIcon.jsx";
-import { auth } from "../../firestore"; // firebase 설정 가져오기
+import { auth } from "../../firestore";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 
 export default function NavbarApp() {
@@ -13,13 +13,7 @@ export default function NavbarApp() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log(`현재 로그인 아이디: ${user.email}`);
-        setUser(user);
-      } else {
-        console.log("로그인한 아이디가 없습니다.");
-        setUser(null);
-      }
+      setUser(user);
     });
 
     return () => unsubscribe();
@@ -28,60 +22,57 @@ export default function NavbarApp() {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      console.log("로그아웃 되었습니다.");
     } catch (error) {
       console.error("로그아웃 실패:", error);
     }
   };
 
   return (
-    <Navbar isBordered>
-      <NavbarContent justify="start">
-        <NavbarBrand className="mr-4">
-          <Link href="/" color="foreground">
-          <AcmeLogo />
-          <p className="hidden sm:block font-bold text-inherit">AI 계산기</p>
-          </Link>
-        </NavbarBrand>
-        <NavbarContent className="hidden sm:flex gap-3">
-          {user ? (
-            <>
-              <NavbarItem>
-                <Link href="#" color="foreground" onClick={handleLogout}>
-                  로그아웃
-                </Link>
-              </NavbarItem>
-              <NavbarItem>
-                <Link href="/write" color="foreground">
-                  글쓰기
-                </Link>
-              </NavbarItem>
-            </>
-          ) : (
-            <NavbarItem isActive>
-              <Link href="/login" aria-current="page" color="secondary">
-                로그인
+    <Navbar isBordered className="bg-[#2E8B57] bg-opacity-90 backdrop-blur-sm">
+      <NavbarBrand>
+        <AcmeLogo />
+        <p className="font-bold text-white hidden sm:block font-['Roboto Rounded']">CalcWave</p>
+      </NavbarBrand>
+
+      <NavbarContent justify="end" className="gap-4">
+        <NavbarItem className="flex">
+          <Input
+            classNames={{
+              base: "max-w-[140px] sm:max-w-[200px] h-10",
+              mainWrapper: "h-full",
+              input: "text-small",
+              inputWrapper: "h-full font-normal text-[#2E8B57] bg-[#F0F8FF] bg-opacity-90",
+            }}
+            placeholder="계산기 찾기"
+            size="sm"
+            startContent={<SearchIcon size={18} />}
+            type="search"
+          />
+        </NavbarItem>
+        {user ? (
+          <>
+            <NavbarItem>
+              <Link href="/write" className="text-white hover:text-[#40E0D0] transition-colors ripple-effect">
+                글쓰기
               </Link>
             </NavbarItem>
-          )}
-        </NavbarContent>
-      </NavbarContent>
-
-      <NavbarContent as="div" className="items-center" justify="end">
-        <Input
-          classNames={{
-            base: "max-w-full sm:max-w-[10rem] h-10",
-            mainWrapper: "h-full",
-            input: "text-small",
-            inputWrapper: "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
-          }}
-          placeholder="계산기 찾기"
-          size="sm"
-          startContent={<SearchIcon size={18} />}
-          type="search"
-        />
+            <NavbarItem>
+              <span 
+                onClick={handleLogout} 
+                className="text-white hover:text-[#40E0D0] transition-colors cursor-pointer ripple-effect"
+              >
+                로그아웃
+              </span>
+            </NavbarItem>
+          </>
+        ) : (
+          <NavbarItem>
+            <Link href="/login" className="text-white hover:text-[#40E0D0] transition-colors ripple-effect">
+              로그인
+            </Link>
+          </NavbarItem>
+        )}
       </NavbarContent>
     </Navbar>
   );
 }
-

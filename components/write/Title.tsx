@@ -1,4 +1,5 @@
-// app/components/write/Title.tsx
+// ./components/write/Title.tsx
+
 'use client'
 
 import React, { useState, ChangeEvent, FC } from 'react';
@@ -31,13 +32,17 @@ const Title: FC<TitleProps> = ({ setTitle, setDescription, setHashtag }) => {
     };
 
     return (
-        <div className="flex flex-col gap-4 m-2">
+        <div className="flex flex-col gap-6 m-2">
             <Input
                 type="text"
                 label="Title"
                 placeholder="Enter the title"
                 value={localTitle}
                 onChange={handleTitleChange}
+                className="border border-[#87CEEB] rounded-lg"
+                labelPlacement="inside"
+                fullWidth
+                size="lg"
             />
 
             <Textarea
@@ -45,6 +50,12 @@ const Title: FC<TitleProps> = ({ setTitle, setDescription, setHashtag }) => {
                 placeholder="Enter the description"
                 value={localDescription}
                 onChange={handleDescriptionChange}
+                className="border border-[#87CEEB] rounded-lg"
+                labelPlacement="inside"
+                fullWidth
+                size="lg"
+                minRows={4}
+                maxRows={10}
             />
 
             <Input
@@ -53,6 +64,10 @@ const Title: FC<TitleProps> = ({ setTitle, setDescription, setHashtag }) => {
                 placeholder="Enter the hashtag"
                 value={localHashtag}
                 onChange={handleHashtagChange}
+                className="border border-[#87CEEB] rounded-lg"
+                labelPlacement="inside"
+                fullWidth
+                size="lg"
             />
         </div>
     );

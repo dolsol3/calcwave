@@ -45,7 +45,12 @@ const LoginButton: React.FC = () => {
   };
 
   return (
-    <Button color="success" onClick={handleLogin}>Google로 로그인하기</Button>
+    <Button 
+      className="bg-[#2E8B57] text-white hover:bg-[#40E0D0] transition duration-300"
+      onClick={handleLogin}
+    >
+      Google로 로그인하기
+    </Button>
   );
 };
 
