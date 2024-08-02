@@ -1,4 +1,5 @@
 // ./app/write/page.tsx
+
 'use client'
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -6,6 +7,7 @@ import { auth } from '../../firestore';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import Title from '../../components/write/Title';
 import { Button, Card, CardBody } from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/react";
 
 const WritePage: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -13,6 +15,7 @@ const WritePage: React.FC = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [hashtag, setHashtag] = useState('');
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -28,7 +31,12 @@ const WritePage: React.FC = () => {
 
   const handlePublish = async () => {
     if (!user) {
-      alert("로그인이 필요합니다.");
+      alert("Log in is required.");
+      return;
+    }
+
+    if (!title || !description || !hashtag) {
+      onOpen();
       return;
     }
 
@@ -59,8 +67,8 @@ const WritePage: React.FC = () => {
         alert(errorData.error);
       }
     } catch (error) {
-      console.error("계산기 발행 중 오류가 발생했습니다:", error);
-      alert('계산기 발행에 실패했습니다.');
+      console.error("An error occurred during the publication of the article:", error);
+      alert('The publication of the article failed.');
     }
   };
 
@@ -78,10 +86,24 @@ const WritePage: React.FC = () => {
             onClick={handlePublish} 
             className="mt-6 button-primary w-full"
           >
-            계산기 발행하기
+            Publishing Articles
           </Button>
         </CardBody>
       </Card>
+      
+      <Modal isOpen={isOpen} onOpenChange={onClose} placement="center">
+        <ModalContent>
+          <ModalHeader className="flex flex-col gap-1">Missing input</ModalHeader>
+          <ModalBody>
+            <p>Please enter everything.</p>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary" onPress={onClose}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 };

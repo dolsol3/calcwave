@@ -1,6 +1,6 @@
-// components/navbar/App.jsx
+// ./components/navbar/app.jsx
 
-'use client'
+'use client';
 import React, { useEffect, useState } from "react";
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Input, Link } from "@nextui-org/react";
 import Logo from "./logo.jsx";
@@ -13,6 +13,7 @@ export default function NavbarApp() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      console.log("User state changed:", user); // 상태 변경 확인을 위한 로그
       setUser(user);
     });
 
@@ -22,8 +23,9 @@ export default function NavbarApp() {
   const handleLogout = async () => {
     try {
       await signOut(auth);
+      console.log("User logged out"); // 로그아웃 확인을 위한 로그
     } catch (error) {
-      console.error("로그아웃 실패:", error);
+      console.error("Failed to log out:", error);
     }
   };
 
@@ -35,7 +37,8 @@ export default function NavbarApp() {
       </NavbarBrand>
 
       <NavbarContent justify="end" className="gap-4">
-        <NavbarItem className="flex">
+        {/* 검색 부분은 추후 개발하기 */}
+        {/* <NavbarItem className="flex">
           <Input
             classNames={{
               base: "max-w-[140px] sm:max-w-[200px] h-10",
@@ -43,32 +46,31 @@ export default function NavbarApp() {
               input: "text-small",
               inputWrapper: "h-full font-normal text-[#2E8B57] bg-[#F0F8FF] bg-opacity-90",
             }}
-            placeholder="계산기 찾기"
+            placeholder="Search"
             size="sm"
             startContent={<SearchIcon size={18} />}
             type="search"
           />
-        </NavbarItem>
+        </NavbarItem> */}
         {user ? (
           <>
             <NavbarItem>
               <Link href="/write" className="text-white hover:text-[#40E0D0] transition-colors ripple-effect">
-                글쓰기
+                Write
               </Link>
             </NavbarItem>
             <NavbarItem>
               <span 
                 onClick={handleLogout} 
-                className="text-white hover:text-[#40E0D0] transition-colors cursor-pointer ripple-effect"
-              >
-                로그아웃
+                className="text-white hover:text-[#40E0D0] transition-colors cursor-pointer ripple-effect">
+                Logout
               </span>
             </NavbarItem>
           </>
         ) : (
           <NavbarItem>
             <Link href="/login" className="text-white hover:text-[#40E0D0] transition-colors ripple-effect">
-              로그인
+              Login
             </Link>
           </NavbarItem>
         )}

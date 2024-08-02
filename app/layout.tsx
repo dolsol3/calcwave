@@ -22,6 +22,18 @@ export const metadata: Metadata = {
   other: {
     'naver-site-verification': '2e3f77b3a472326232fcaaed94a2945bc55f12eb',
   },
+  openGraph: {
+    images: [
+      {
+        url: 'https://firebasestorage.googleapis.com/v0/b/calc-sky4.appspot.com/o/metaImgae_calcwave.jpg?alt=media&token=72b0ca2c-47a5-4b16-b2f4-d42b2418ee55',
+      },
+    ],
+  },
+  twitter: {
+    images: [
+      'https://firebasestorage.googleapis.com/v0/b/calc-sky4.appspot.com/o/metaImgae_calcwave.jpg?alt=media&token=72b0ca2c-47a5-4b16-b2f4-d42b2418ee55',
+    ],
+  },
 };
 
 export default function RootLayout({

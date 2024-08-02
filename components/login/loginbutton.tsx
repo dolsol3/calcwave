@@ -39,8 +39,8 @@ const LoginButton: React.FC = () => {
 
       router.push('/');
     } catch (error) {
-      console.error("로그인 요청 중 오류 발생:", error);
-      alert('로그인에 실패하였습니다.');
+      console.error("Error requesting login:", error);
+      alert('Login failed.');
     }
   };
 
@@ -49,7 +49,7 @@ const LoginButton: React.FC = () => {
       className="bg-[#2E8B57] text-white hover:bg-[#40E0D0] transition duration-300"
       onClick={handleLogin}
     >
-      Google로 로그인하기
+      Login
     </Button>
   );
 };

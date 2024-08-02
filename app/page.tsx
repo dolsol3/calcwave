@@ -20,6 +20,7 @@ interface Detail {
 
 export default function Home() {
   const [details, setDetails] = useState<Detail[]>([]);
+  const [hydrated, setHydrated] = useState(false); // Hydration 상태
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -36,7 +37,12 @@ export default function Home() {
     };
 
     fetchDetails();
+    setHydrated(true); // 클라이언트에서 데이터가 로드되었음을 설정
   }, []);
+
+  if (!hydrated) {
+    return null; // 클라이언트가 준비되기 전에 아무것도 렌더링하지 않음
+  }
 
   return (
     <div className="w-full max-w-7xl mx-auto py-8">

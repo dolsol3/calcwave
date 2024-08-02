@@ -3,7 +3,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
-import { Card, CardBody, Input, Button, Chip } from "@nextui-org/react";
+import { Card, CardBody, Input, Button, Chip, Modal, ModalContent, ModalHeader, ModalBody, Spinner, useDisclosure } from "@nextui-org/react";
 
 const convertTextToHTML = (textArray: string[]): JSX.Element[] => {
   return textArray.map((paragraph: string, index: number) => {
@@ -34,6 +34,7 @@ const ClientComponent: React.FC<ClientComponentProps> = ({ calculator, userId, s
   const [aiResponse, setAiResponse] = useState<any>(null);
   const [viewCount, setViewCount] = useState<number>(calculator.방문자수);
   const [calcCount, setCalcCount] = useState<number>(calculator.계산횟수);
+  const {isOpen, onOpen, onOpenChange} = useDisclosure();
 
   useEffect(() => {
     // Increase view count
@@ -52,6 +53,8 @@ const ClientComponent: React.FC<ClientComponentProps> = ({ calculator, userId, s
 
   const handleAskAI = async () => {
     console.log("Question submitted:", question);
+    onOpen(); // 모달 열기
+    setAiResponse(null); // AI 응답 초기화
     try {
       const response = await fetch('https://askai-hry6fdb6aa-du.a.run.app/askAI', {
         method: 'POST',
@@ -87,8 +90,12 @@ const ClientComponent: React.FC<ClientComponentProps> = ({ calculator, userId, s
 
     } catch (error) {
       console.error("Error asking AI:", error);
-      setAiResponse({ error: "AI 응답을 가져오는 중 오류가 발생했습니다." });
+      setAiResponse({ error: "Error getting AI response." });
     }
+  };
+
+  const handleCloseModal = () => {
+    onOpenChange(); // 모달 닫기
   };
 
   return (
@@ -107,16 +114,16 @@ const ClientComponent: React.FC<ClientComponentProps> = ({ calculator, userId, s
         ))}
       </div>
       <div className="text-sm text-gray-600 mb-6">
-        <span className="mr-4">조회수: {viewCount}</span>
-        <span>계산 횟수: {calcCount}</span>
+        <span className="mr-4">Views: {viewCount}</span>
+        <span>Calculations: {calcCount}</span>
       </div>
 
       {/* 여기에 계산기 주요 기능 구현 */}
 
-      <div className="fixed bottom-0 left-0 right-0 bg-[#40E0D0] p-4 flex justify-center items-center shadow-lg">
+      <div className="fixed bottom-0 left-0 right-0 bg-[#40E0D0] p-4 flex justify-center items-center shadow-lg z-50"> {/* z-50으로 가장 위에 위치 */}
         <Input
           className="w-2/3 mr-2"
-          placeholder="AI에게 질문하세요"
+          placeholder="Ask A.I. what to calculate."
           value={question}
           onChange={handleQuestionChange}
         />
@@ -125,17 +132,47 @@ const ClientComponent: React.FC<ClientComponentProps> = ({ calculator, userId, s
           className="bg-[#2E8B57] text-white hover:bg-[#40E0D0] transition duration-300"
           onClick={handleAskAI}
         >
-          질문하기
+          Let A.I. calculate
         </Button>
       </div>
 
-      {aiResponse && (
-        <Card className="mt-6 bg-[#F0F8FF]">
-          <CardBody>
-            <p>{aiResponse.result}</p>
-            <p>{aiResponse.explanation}</p>
-          </CardBody>
-        </Card>
+      {/* AI 응답을 기다리는 동안 모달 */}
+      <Modal isOpen={isOpen} onOpenChange={handleCloseModal}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">Waiting for AI response</ModalHeader>
+              <ModalBody>
+                {aiResponse ? (
+                  <>
+                    <p>{aiResponse.result}</p>
+                    <p>{aiResponse.explanation}</p>
+                    <Button color="primary" onPress={onClose}>
+                      Close
+                    </Button>
+                  </>
+                ) : (
+                  <div className="flex justify-center items-center">
+                    <Spinner />
+                    <p className="ml-2">I'm waiting for a reply from AI...</p>
+                  </div>
+                )}
+              </ModalBody>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+
+      {/* 모달이 닫힌 후에만 결과를 보여줌 */}
+      {!isOpen && aiResponse && (
+        <div className="mt-6"> {/* 기존 콘텐츠와 동일한 형태로 표시 */}
+          <Card className="bg-[#F0F8FF]">
+            <CardBody>
+              <p>{aiResponse.result}</p>
+              <p>{aiResponse.explanation}</p>
+            </CardBody>
+          </Card>
+        </div>
       )}
     </div>
   );
