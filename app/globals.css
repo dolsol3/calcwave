@@ -10,9 +10,41 @@
   --color-sand: #F4A460;
   --color-bright-teal: #40E0D0;
   --color-pale-blue: #F0F8FF;
+  --color-text: #333333;
 }
 
 body {
+  background-color: var(--color-pale-blue);
+  color: var(--color-deep-teal);
+  font-family: 'Noto Sans KR', sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* 가로 스크롤 방지 */
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Roboto Rounded', sans-serif;
+  color: var(--color-deep-teal);
+}
+
+.card {
+  background: linear-gradient(135deg, #ffffff 0%, #f0f8ff 100%);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.button-primary {
+  background-color: var(--color-deep-teal);
+  color: #ffffff;
+}
+
+.button-primary:hover {
+  background-color: var(--color-bright-teal);
+}
+
+.input, .textarea {
+  border: 1px solid var(--color-light-sky);
+  border-radius: 0.5rem;
   background-color: var(--color-pale-blue);
   color: var(--color-deep-teal);
 }

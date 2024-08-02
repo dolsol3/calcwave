@@ -3,7 +3,7 @@
 'use client'
 import React, { useEffect, useState } from "react";
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Input, Link } from "@nextui-org/react";
-import { AcmeLogo } from "./AcmeLogo.jsx";
+import Logo from "./logo.jsx";
 import { SearchIcon } from "./SearchIcon.jsx";
 import { auth } from "../../firestore";
 import { onAuthStateChanged, signOut } from "firebase/auth";
@@ -30,7 +30,7 @@ export default function NavbarApp() {
   return (
     <Navbar isBordered className="bg-[#2E8B57] bg-opacity-90 backdrop-blur-sm">
       <NavbarBrand>
-        <AcmeLogo />
+        <Logo />
         <p className="font-bold text-white hidden sm:block font-['Roboto Rounded']">CalcWave</p>
       </NavbarBrand>
 

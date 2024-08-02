@@ -39,13 +39,13 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8 bg-[#F0F8FF]">
+    <div className="w-full max-w-7xl mx-auto py-8">
       <h1 className="text-4xl font-bold text-center mb-10 text-[#2E8B57] font-['Roboto Rounded']">AI Wave Calculator</h1>
       <div className="relative">
         <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-[#87CEEB] transform -translate-x-1/2"></div>
         {details.map((detail, index) => (
           <div key={detail.id} className="relative mb-8">
-            <div className={`w-[calc(50%-20px)] ${index % 2 === 0 ? 'ml-auto' : 'mr-auto'}`}>
+            <div className={`w-full md:w-[45%] lg:w-[48%] ${index % 2 === 0 ? 'md:ml-auto' : 'md:mr-auto'}`}>
               <Card 
                 as={Link}
                 href={`/detail/${detail.userId}/${encodeURIComponent(detail.slug)}`}

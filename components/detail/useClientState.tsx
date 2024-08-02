@@ -93,8 +93,8 @@ const ClientComponent: React.FC<ClientComponentProps> = ({ calculator, userId, s
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 pb-24">
-      <h1 className="text-3xl font-bold text-[#2E8B57] mb-6">{calculator.계산기이름}</h1>
-      <Card className="mb-6">
+      <h1 className="text-3xl font-bold mb-6">{calculator.계산기이름}</h1>
+      <Card className="mb-6 card">
         <CardBody>
           {convertTextToHTML(calculator.계산기설명)}
         </CardBody>
@@ -122,7 +122,7 @@ const ClientComponent: React.FC<ClientComponentProps> = ({ calculator, userId, s
         />
         <Button 
           color="primary"
-          className="bg-[#2E8B57]"
+          className="bg-[#2E8B57] text-white hover:bg-[#40E0D0] transition duration-300"
           onClick={handleAskAI}
         >
           질문하기

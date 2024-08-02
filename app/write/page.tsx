@@ -69,20 +69,20 @@ const WritePage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#F0F8FF] px-4">
-      <h1 className="text-4xl font-bold text-[#2E8B57] my-10 font-['Roboto Rounded']">계산기 작성</h1>
-      <Card className="max-w-4xl w-full shadow-md rounded-lg bg-white">
-        <CardBody className="p-8">
+    <>
+      <h1 className="text-4xl font-bold text-center mb-8 text-[#2E8B57] font-['Roboto Rounded']">계산기 작성</h1>
+      <Card className="max-w-4xl w-full shadow-md rounded-lg bg-white mx-auto">
+        <CardBody className="p-8 flex flex-col items-center">
           <Title setTitle={setTitle} setDescription={setDescription} setHashtag={setHashtag} />
           <Button 
             onClick={handlePublish} 
-            className="mt-6 bg-[#2E8B57] text-white hover:bg-[#40E0D0] transition duration-300"
+            className="mt-6 button-primary w-full"
           >
             계산기 발행하기
           </Button>
         </CardBody>
       </Card>
-    </div>
+    </>
   );
 };
 

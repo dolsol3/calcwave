@@ -32,7 +32,7 @@ const Title: FC<TitleProps> = ({ setTitle, setDescription, setHashtag }) => {
     };
 
     return (
-        <div className="flex flex-col gap-6 m-2">
+        <div className="flex flex-col gap-6 w-full">
             <Input
                 type="text"
                 label="Title"

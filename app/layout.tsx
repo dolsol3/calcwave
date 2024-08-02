@@ -1,17 +1,16 @@
-// app/layout.tsx
+// ./app/layout.tsx
 
 import React from 'react';
 import type { Metadata } from "next";
-import { Noto_Sans_KR } from "next/font/google";
+import { Noto_Sans_KR, Roboto } from "next/font/google";
 import "./globals.css";
 import NavbarApp from "../components/navbar/App";
 import { Providers } from "./providers";
 import GoogleTagManagerComponent from './gtm';
 import AdsenseComponent from './adsense';
 
-const notoSansKr = Noto_Sans_KR({ subsets: ["latin"] });
-
-
+const notoSansKr = Noto_Sans_KR({ subsets: ["latin"], weight: ['400', '700'] });
+const roboto = Roboto({ subsets: ["latin"], weight: ['400', '700'] });
 
 export const metadata: Metadata = {
   title: "AI Wave Calculator, CalcWave",
@@ -35,10 +34,14 @@ export default function RootLayout({
         <GoogleTagManagerComponent />
         <AdsenseComponent />
       </head>
-      <body className={`${notoSansKr.className} bg-blue-50`}>
+      <body className={`${notoSansKr.className} ${roboto.className} bg-blue-50 flex flex-col min-h-screen`}> 
         <Providers>
           <NavbarApp />
-          {children}
+          <main className="flex-1 w-full flex flex-col items-center bg-[#F0F8FF] px-4 overflow-y-auto">
+            <div className="w-full max-w-7xl py-8">
+              {children}
+            </div>
+          </main>
         </Providers>
       </body>
     </html>
