@@ -8,6 +8,7 @@ import NavbarApp from "../components/navbar/App";
 import { Providers } from "./providers";
 import GoogleTagManagerComponent from './gtm';
 import AdsenseComponent from './adsense';
+import Sidebar from '../components/sidebar/sidebar'; // 사이드바 컴포넌트 추가
 
 const notoSansKr = Noto_Sans_KR({ subsets: ["latin"], weight: ['400', '700'] });
 const roboto = Roboto({ subsets: ["latin"], weight: ['400', '700'] });
@@ -37,11 +38,14 @@ export default function RootLayout({
       <body className={`${notoSansKr.className} ${roboto.className} bg-blue-50 flex flex-col min-h-screen`}> 
         <Providers>
           <NavbarApp />
-          <main className="flex-1 w-full flex flex-col items-center bg-[#F0F8FF] px-4 overflow-y-auto">
-            <div className="w-full max-w-7xl py-8">
-              {children}
-            </div>
-          </main>
+          <div className="flex w-full flex-1 justify-center px-4 gap-4">
+            <Sidebar />
+            <main className="flex-1 max-w-7xl flex flex-col items-center bg-[#F0F8FF] overflow-y-auto">
+              <div className="w-full py-8">
+                {children}
+              </div>
+            </main>
+          </div>
         </Providers>
       </body>
     </html>
