@@ -6,9 +6,10 @@ import { Noto_Sans_KR, Roboto } from "next/font/google";
 import "./globals.css";
 import NavbarApp from "../components/navbar/App";
 import { Providers } from "./providers";
-import GoogleTagManagerComponent from './gtm';
-import AdsenseComponent from './adsense';
-import Sidebar from '../components/sidebar/sidebar'; // 사이드바 컴포넌트 추가
+import GoogleTagManagerComponent from '../components/gtm';
+import AdsenseComponent from '../components/adsense';
+import Sidebar from '../components/sidebar/sidebar';
+import GoogleAnalytics from '../components/GoogleAnalytics';
 
 const notoSansKr = Noto_Sans_KR({ subsets: ["latin"], weight: ['400', '700'] });
 const roboto = Roboto({ subsets: ["latin"], weight: ['400', '700'] });
@@ -46,6 +47,7 @@ export default function RootLayout({
       <head>
         <GoogleTagManagerComponent />
         <AdsenseComponent />
+        <GoogleAnalytics /> {/* Google Analytics 컴포넌트 추가 */}
       </head>
       <body className={`${notoSansKr.className} ${roboto.className} bg-blue-50 flex flex-col min-h-screen`}> 
         <Providers>
