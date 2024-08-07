@@ -5,25 +5,30 @@
 @tailwind utilities;
 
 :root {
-  --color-deep-teal: #2E8B57;
-  --color-light-sky: #87CEEB;
-  --color-sand: #F4A460;
-  --color-bright-teal: #40E0D0;
-  --color-pale-blue: #F0F8FF;
+  --color-deep-teal: #2e8b57;
+  --color-light-sky: #87ceeb;
+  --color-sand: #f4a460;
+  --color-bright-teal: #40e0d0;
+  --color-pale-blue: #f0f8ff;
   --color-text: #333333;
 }
 
 body {
   background-color: var(--color-pale-blue);
   color: var(--color-deep-teal);
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: "Noto Sans KR", sans-serif;
   margin: 0;
   padding: 0;
   overflow-x: hidden; /* 가로 스크롤 방지 */
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Roboto Rounded', sans-serif;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Roboto Rounded", sans-serif;
   color: var(--color-deep-teal);
 }
 
@@ -42,7 +47,8 @@ h1, h2, h3, h4, h5, h6 {
   background-color: var(--color-bright-teal);
 }
 
-.input, .textarea {
+.input,
+.textarea {
   border: 1px solid var(--color-light-sky);
   border-radius: 0.5rem;
   background-color: var(--color-pale-blue);
@@ -103,11 +109,19 @@ h1, h2, h3, h4, h5, h6 {
   background-position: 50%;
   transform: scale(10, 10);
   opacity: 0;
-  transition: transform .5s, opacity 1s;
+  transition: transform 0.5s, opacity 1s;
 }
 
 .ripple-effect:active:after {
   transform: scale(0, 0);
-  opacity: .3;
+  opacity: 0.3;
   transition: 0s;
+}
+
+
+iframe {
+  width: 100%;
+  border: none;
+  background-color: var(--color-pale-blue);
+  color: var(--color-deep-teal);
 }

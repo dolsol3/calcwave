@@ -78,7 +78,7 @@ const WritePage: React.FC = () => {
 
   return (
     <>
-      <h1 className="text-4xl font-bold text-center mb-8 text-[#2E8B57] font-['Roboto Rounded']">계산기 작성</h1>
+      <h1 className="text-4xl font-bold text-center mb-8 text-[#2E8B57] font-['Roboto Rounded']">Create Calculator</h1>
       <Card className="max-w-4xl w-full shadow-md rounded-lg bg-white mx-auto">
         <CardBody className="p-8 flex flex-col items-center">
           <Title setTitle={setTitle} setDescription={setDescription} setHashtag={setHashtag} />

@@ -10,6 +10,7 @@ import GoogleTagManagerComponent from '../components/gtm';
 import AdsenseComponent from '../components/adsense';
 import Sidebar from '../components/sidebar/sidebar';
 import GoogleAnalytics from '../components/GoogleAnalytics';
+import BuyMeACoffeeWidget from '@/components/sidebar/BuyMeACoffeeButton';
 
 const notoSansKr = Noto_Sans_KR({ subsets: ["latin"], weight: ['400', '700'] });
 const roboto = Roboto({ subsets: ["latin"], weight: ['400', '700'] });
