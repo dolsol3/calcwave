@@ -118,9 +118,9 @@ const ClientComponent: React.FC<ClientComponentProps> = ({ calculator, userId, s
         <span>Calculations: {calcCount}</span>
       </div>
 
-      {/* 여기에 계산기 주요 기능 구현 */}
+      {/* 계산기 주요 기능 구현 */}
 
-      <div className="fixed bottom-0 left-0 right-0 bg-[#40E0D0] p-4 flex justify-center items-center shadow-lg z-50"> {/* z-50으로 가장 위에 위치 */}
+      <div className="input-container">
         <Input
           className="w-2/3 mr-2"
           placeholder="Ask A.I. what to calculate."
@@ -135,6 +135,7 @@ const ClientComponent: React.FC<ClientComponentProps> = ({ calculator, userId, s
           Let A.I. calculate
         </Button>
       </div>
+
 
       {/* AI 응답을 기다리는 동안 모달 */}
       <Modal isOpen={isOpen} onOpenChange={handleCloseModal}>

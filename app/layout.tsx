@@ -48,21 +48,22 @@ export default function RootLayout({
       <head>
         <GoogleTagManagerComponent />
         <AdsenseComponent />
-        <GoogleAnalytics /> {/* Google Analytics 컴포넌트 추가 */}
+        <GoogleAnalytics />
       </head>
       <body className={`${notoSansKr.className} ${roboto.className} bg-blue-50 flex flex-col min-h-screen`}> 
         <Providers>
           <NavbarApp />
-          <div className="flex w-full flex-1 justify-center px-4 gap-4">
-            <Sidebar />
-            <main className="flex-1 max-w-7xl flex flex-col items-center bg-[#F0F8FF] overflow-y-auto">
-              <div className="w-full py-8">
+          <div className="flex flex-1 w-full">
+            <Sidebar className="hidden lg:block w-80 flex-shrink-0" />
+            <main className="flex-grow overflow-x-hidden">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {children}
               </div>
             </main>
           </div>
+          <BuyMeACoffeeWidget />
         </Providers>
       </body>
-    </html>
+    </html>  
   );
 }

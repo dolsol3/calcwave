@@ -63,19 +63,25 @@ h6 {
 @media (min-width: 1024px) {
   .sidebar {
     display: block;
-    width: 400px;
-    /* background-color: #fff; */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 20rem; /* 사이드바 폭을 고정 */
     padding: 20px;
     position: sticky;
-    top: 20px; /* 화면 상단에서 사이드바가 떨어져 있는 거리 */
-    height: calc(100vh - 40px); /* 전체 높이에서 top과 bottom 여백을 뺀 값 */
-    margin-left: 1rem; /* 콘텐츠와 사이드바 사이의 간격 */
+    top: 64px; /* 화면 상단에서 사이드바가 떨어져 있는 거리 */
+    left: 0; /* 화면의 왼쪽에 고정 */
+    height: calc(100vh - 64px); /* 전체 높이에서 top과 bottom 여백을 뺀 값 */
+    background-color: var(--color-pale-blue);
+    /* 왼쪽을 제외한 방향에 그림자를 적용 */
+    box-shadow: 4px 0 6px rgba(0, 0, 0, 0.1); /* 오른쪽과 아래쪽에만 그림자가 적용 */
+    border-left: none; /* 왼쪽 선을 없애고 싶은 경우 */
+    overflow-y: auto; /* 사이드바 내부 스크롤 허용 */
+
   }
 }
 
+
 .main-content {
   flex-grow: 1;
+  padding: 20px; /* 추가적인 패딩 */
 }
 
 /* 물결 효과 애니메이션 */
@@ -125,3 +131,40 @@ iframe {
   background-color: var(--color-pale-blue);
   color: var(--color-deep-teal);
 }
+
+
+@media (min-width: 1024px) {
+  .input-container {
+    position: fixed;
+    bottom: 0;
+    left: calc(20rem); /* 사이드바를 제외한 부분만을 고려하여 left 조정 */
+    width: calc(100% - 20rem); /* 사이드바를 제외한 화면의 전체 너비 */
+    max-width: calc(100% - 20rem); /* 사이드바를 제외한 최대 너비 */
+    background-color: #40E0D0;
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 50;
+  }
+}
+
+
+@media (max-width: 1023px) {
+  .input-container {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    background-color: #40E0D0;
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 50;
+  }
+}
+
